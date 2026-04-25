@@ -8,8 +8,8 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --cream:#F7F3EC;--warm:#EDE5D8;--gold:#B8976A;--gold-light:#D4B896;
-  --gold-dark:#8A6A40;--ink:#2C2218;--ink-muted:#9A8A78;--green:#4A6650;
+  --cream:#F7F3EC;--gold:#B8976A;--gold-light:#D4B896;
+  --gold-dark:#8A6A40;--ink:#2C2218;--ink-muted:#9A8A78;
   --border:rgba(184,151,106,0.3);--shadow:rgba(44,34,24,0.08);
 }
 body{
@@ -20,16 +20,16 @@ body{
     radial-gradient(ellipse at 15% 10%,rgba(184,151,106,0.1) 0%,transparent 55%),
     radial-gradient(ellipse at 85% 90%,rgba(74,102,80,0.07) 0%,transparent 55%);
 }
-.header{text-align:center;padding:5rem 2rem 3rem;position:relative}
+.header{text-align:center;padding:5rem 2rem 3rem}
 .header-ornament{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--gold);font-size:13px;letter-spacing:.35em;margin-bottom:1.5rem;opacity:.85;animation:fadeDown .7s ease both}
 .title-kr{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(32px,7vw,56px);letter-spacing:.04em;line-height:1.25;animation:fadeDown .7s .1s ease both}
 .title-kr em{font-style:italic;color:var(--gold-dark)}
 .title-sub{margin-top:.75rem;font-family:"Cormorant Garamond",serif;font-size:14px;letter-spacing:.3em;color:var(--ink-muted);font-style:italic;animation:fadeDown .7s .2s ease both}
-.divider{display:flex;align-items:center;gap:14px;max-width:200px;margin:1.75rem auto 0;color:var(--gold);animation:fadeDown .7s .3s ease both}
+.divider{display:flex;align-items:center;gap:14px;max-width:200px;margin:1.75rem auto 0;animation:fadeDown .7s .3s ease both}
 .divider::before,.divider::after{content:"";flex:1;height:.5px;background:linear-gradient(90deg,transparent,var(--gold-light),transparent)}
-.divider-icon{font-size:14px;opacity:.7}
+.divider-icon{font-size:14px;opacity:.7;color:var(--gold)}
 .programs{width:100%;max-width:900px;padding:2rem 2rem 5rem;display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.card{background:white;border:.5px solid var(--border);border-radius:20px;padding:2rem 1.75rem;cursor:pointer;transition:transform .28s cubic-bezier(.34,1.56,.64,1),box-shadow .25s ease,border-color .25s ease;position:relative;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;animation:fadeUp .55s ease both}
+.card{background:white;border:.5px solid var(--border);border-radius:20px;padding:2rem 1.75rem;cursor:pointer;transition:transform .28s cubic-bezier(.34,1.56,.64,1),box-shadow .25s,border-color .25s;position:relative;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;animation:fadeUp .55s ease both}
 .card::before{content:"";position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold-light),transparent);opacity:0;transition:opacity .25s}
 .card:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 12px 40px var(--shadow);border-color:var(--gold-light)}
 .card:hover::before{opacity:1}
@@ -61,18 +61,19 @@ body{
 
 <div class="header">
   <div class="header-ornament">✦  Reception Program  ✦</div>
-  <div class="title-kr">고운 <em>&amp;</em> 재원의<br>피로연 프로그램</div>
+  <div class="title-kr">고운 <em>&</em> 재원의<br>피로연 프로그램</div>
   <div class="title-sub">2026. 05. 09 · 남산뜰</div>
   <div class="divider"><span class="divider-icon">❧</span></div>
 </div>
 
 <div class="programs">
+
   <a class="card card-1" href="wedding_ox_quiz.html" target="_blank">
     <div class="card-bg-deco"></div>
     <div class="card-num">Program 01</div>
     <div class="card-icon">⭕</div>
     <div class="card-title">신랑 신부<br>OX 퀴즈</div>
-    <div class="card-desc">&#xC7AC;&#xC6D0;&#xC774;&#xC640; 고운&#xC774;&#xC5D0; &#xAD00;&#xD55C;<br>숨겨진 이야기를 맞혀보세요</div>
+    <div class="card-desc">재원이와 고운이에 관한<br>숨겨진 이야기를 맞혀보세요</div>
     <div class="card-cta">시작하기 →</div>
   </a>
 
@@ -102,6 +103,7 @@ body{
     <div class="card-desc">오늘의 인연이<br>이 자리에서 시작될지도요</div>
     <div class="card-cta">참여하기 →</div>
   </a>
+
 </div>
 
 <div class="footer">May your love story unfold beautifully ✦</div>
