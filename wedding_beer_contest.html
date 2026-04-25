@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>맥주 500mL 빨리 마시기 대회</title>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--amber:#E8A020;--amber-dark:#C07010;--amber-light:#F5C060;--foam:#FFF8E8;--dark:#1A1208;--muted:#8A7040;--white:#FFFDF5}
+body{background:var(--dark);color:var(--white);font-family:"Noto Sans KR",sans-serif;min-height:100vh;overflow-x:hidden;position:relative}
+.bubbles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.bubble{position:absolute;bottom:-60px;border-radius:50%;background:rgba(232,160,32,0.12);animation:rise linear infinite}
+@keyframes rise{0%{transform:translateY(0) scale(1);opacity:.6}100%{transform:translateY(-110vh) scale(.5);opacity:0}}
+.screen{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center}
+.intro-emoji{font-size:80px;margin-bottom:1rem;animation:bounce 1.2s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.intro-title{font-family:"Black Han Sans",sans-serif;font-size:clamp(28px,6vw,52px);color:var(--amber-light);line-height:1.2;margin-bottom:.5rem;text-shadow:0 0 40px rgba(232,160,32,.5)}
+.intro-subtitle{font-size:15px;color:var(--amber);letter-spacing:.15em;margin-bottom:2rem;opacity:.8}
+.intro-card{background:rgba(232,160,32,.08);border:1px solid rgba(232,160,32,.25);border-radius:20px;padding:2rem 2.5rem;max-width:500px;margin:0 auto 2.5rem;text-align:left}
+.intro-card p{font-size:17px;line-height:2.1;color:var(--foam)}
+.intro-card p strong{color:var(--amber-light)}
+.prize-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--amber-dark),var(--amber));color:var(--dark);font-weight:900;font-size:14px;padding:8px 20px;border-radius:40px;margin-top:1rem;letter-spacing:.05em}
+.btn{font-family:"Black Han Sans",sans-serif;font-size:18px;letter-spacing:.1em;background:linear-gradient(135deg,var(--amber),var(--amber-light));color:var(--dark);border:none;padding:16px 48px;border-radius:50px;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 24px rgba(232,160,32,.35)}
+.btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 8px 32px rgba(232,160,32,.5)}
+.btn:active{transform:scale(.98)}
+.btn-ghost{background:transparent;color:var(--amber);border:1px solid rgba(232,160,32,.4);box-shadow:none;font-size:14px;padding:10px 28px}
+.btn-ghost:hover{background:rgba(232,160,32,.08);box-shadow:none}
+.reg-title{font-family:"Black Han Sans",sans-serif;font-size:clamp(22px,5vw,38px);color:var(--amber-light);margin-bottom:.5rem}
+.reg-sub{font-size:13px;color:var(--muted);letter-spacing:.1em;margin-bottom:2rem}
+.players-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:480px;width:100%;margin:0 auto 2rem}
+.player-input-wrap{position:relative}
+.player-num{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-family:"Black Han Sans",sans-serif;font-size:20px;color:var(--amber);opacity:.5}
+.player-input{width:100%;background:rgba(232,160,32,.07);border:1px solid rgba(232,160,32,.2);border-radius:14px;padding:14px 14px 14px 40px;font-family:"Noto Sans KR",sans-serif;font-size:16px;color:var(--white);outline:none;transition:border-color .2s,background .2s}
+.player-input::placeholder{color:rgba(255,248,232,.25)}
+.player-input:focus{border-color:var(--amber);background:rgba(232,160,32,.12)}
+.countdown-label{font-size:13px;letter-spacing:.3em;color:var(--amber);opacity:.7;margin-bottom:.5rem;text-transform:uppercase}
+.countdown-num{font-family:"Black Han Sans",sans-serif;font-size:clamp(120px,30vw,220px);color:var(--amber-light);line-height:1;text-shadow:0 0 80px rgba(232,160,32,.6);animation:pulse-num .9s ease-in-out infinite}
+@keyframes pulse-num{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.countdown-go{font-family:"Black Han Sans",sans-serif;font-size:clamp(80px,20vw,160px);color:var(--amber-light);text-shadow:0 0 80px rgba(232,160,32,.8);animation:pop .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.race-header{font-family:"Black Han Sans",sans-serif;font-size:clamp(20px,4vw,32px);color:var(--amber-light);margin-bottom:.25rem}
+.timer-display{font-family:"Black Han Sans",sans-serif;font-size:clamp(56px,14vw,110px);color:var(--amber);text-shadow:0 0 60px rgba(232,160,32,.5);line-height:1;margin-bottom:2rem;letter-spacing:-.02em}
+.race-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:520px;width:100%;margin:0 auto 2rem}
+.race-card{background:rgba(232,160,32,.07);border:1px solid rgba(232,160,32,.18);border-radius:16px;padding:1.25rem 1rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.race-card:not(.done):hover{background:rgba(232,160,32,.14);border-color:var(--amber);transform:scale(1.02)}
+.race-card.done{cursor:default;border-color:rgba(232,160,32,.5);background:rgba(232,160,32,.12)}
+.race-card.done::after{content:"";position:absolute;inset:0;background:rgba(26,18,8,.35);border-radius:16px}
+.race-rank{position:absolute;top:10px;right:12px;font-family:"Black Han Sans",sans-serif;font-size:28px;z-index:1}
+.rank-1{color:#FFD700;text-shadow:0 0 20px rgba(255,215,0,.6)}
+.rank-2{color:#C0C0C0}
+.rank-3{color:#CD7F32}
+.rank-4{color:var(--muted)}
+.race-player-name{font-family:"Black Han Sans",sans-serif;font-size:22px;color:var(--foam);margin-bottom:4px}
+.race-finish-time{font-size:13px;color:var(--amber);letter-spacing:.05em}
+.race-tap-hint{font-size:11px;color:var(--muted);margin-top:4px;opacity:.7}
+.result-title{font-family:"Black Han Sans",sans-serif;font-size:clamp(28px,6vw,48px);color:var(--amber-light);margin-bottom:.5rem;text-shadow:0 0 40px rgba(232,160,32,.5)}
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:8px;margin:1.5rem auto 2rem;max-width:400px}
+.podium-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.podium-name{font-family:"Black Han Sans",sans-serif;font-size:14px;color:var(--foam);text-align:center;word-break:break-all}
+.podium-time{font-size:11px;color:var(--amber)}
+.podium-block{width:100%;border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:center;font-family:"Black Han Sans",sans-serif;font-size:28px}
+.p1 .podium-block{height:100px;background:linear-gradient(180deg,#FFD700,#C09000);color:var(--dark)}
+.p2 .podium-block{height:70px;background:linear-gradient(180deg,#D0D0D0,#909090);color:var(--dark)}
+.p3 .podium-block{height:50px;background:linear-gradient(180deg,#CD7F32,#8A5020);color:var(--dark)}
+.result-list{max-width:380px;width:100%;margin:0 auto 2rem}
+.result-row{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:.5px solid rgba(232,160,32,.12)}
+.result-row-rank{font-family:"Black Han Sans",sans-serif;font-size:18px;min-width:32px}
+.result-row-name{flex:1;font-size:16px;font-weight:700}
+.result-row-time{font-size:13px;color:var(--amber)}
+.prize-announce{background:linear-gradient(135deg,rgba(232,160,32,.15),rgba(232,160,32,.05));border:1px solid rgba(232,160,32,.3);border-radius:16px;padding:1.25rem 2rem;max-width:400px;margin:0 auto 2rem;font-size:16px;line-height:1.8;color:var(--foam)}
+.prize-announce strong{color:var(--amber-light)}
+.screen{display:none}
+.screen.active{display:flex;animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.back-btn{position:fixed;top:16px;left:16px;z-index:100;font-family:"Black Han Sans",sans-serif;font-size:13px;color:var(--amber);opacity:.6;background:rgba(26,18,8,.6);border:1px solid rgba(232,160,32,.2);padding:8px 16px;border-radius:20px;cursor:pointer;text-decoration:none;transition:opacity .2s}
+.back-btn:hover{opacity:1}
+</style>
+</head>
+<body>
+<a class="back-btn" onclick="history.back()">← 뒤로</a>
+<div class="bubbles" id="bubbles"></div>
+
+<div class="screen active" id="s-intro">
+  <div class="intro-emoji">🍺</div>
+  <div class="intro-title">맥주 500mL<br>빨리 마시기 대회!</div>
+  <div class="intro-subtitle">나는 술고래</div>
+  <div class="intro-card">
+    <p>
+      각 테이블에서 자신있는 사람<br>
+      <strong>한 분씩 나오시길 바랍니다.</strong><br><br>
+      가장 빨리 마신 분의 테이블에<br>
+      <strong>포트와인 선물</strong>을 드리겠습니다!
+    </p>
+    <div style="margin-top:1rem;text-align:center">
+      <span class="prize-badge">🏆 최대 4명까지 참가 가능</span>
+    </div>
+  </div>
+  <button class="btn" onclick="show('s-register')">참가자 등록하기 →</button>
+</div>
+
+<div class="screen" id="s-register">
+  <div class="reg-title">🍺 참가자 등록</div>
+  <div class="reg-sub">이름을 입력하세요 (최대 4명)</div>
+  <div class="players-grid">
+    <div class="player-input-wrap"><span class="player-num">1</span><input class="player-input" id="p1" placeholder="참가자 이름" maxlength="6"></div>
+    <div class="player-input-wrap"><span class="player-num">2</span><input class="player-input" id="p2" placeholder="참가자 이름" maxlength="6"></div>
+    <div class="player-input-wrap"><span class="player-num">3</span><input class="player-input" id="p3" placeholder="참가자 이름" maxlength="6"></div>
+    <div class="player-input-wrap"><span class="player-num">4</span><input class="player-input" id="p4" placeholder="참가자 이름" maxlength="6"></div>
+  </div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+    <button class="btn btn-ghost" onclick="show('s-intro')">← 뒤로</button>
+    <button class="btn" onclick="startCountdown()">준비 완료! 🍺</button>
+  </div>
+</div>
+
+<div class="screen" id="s-countdown">
+  <div class="countdown-label">준비하세요!</div>
+  <div id="countdown-num" class="countdown-num">3</div>
+</div>
+
+<div class="screen" id="s-race">
+  <div class="race-header">🍺 빨리 마셔라!</div>
+  <div class="timer-display" id="timer-display">0.00</div>
+  <div class="race-grid" id="race-grid"></div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:1rem">다 마신 사람의 카드를 눌러주세요!</div>
+  <button class="btn" onclick="showResult()" id="finish-all-btn" style="display:none">결과 보기 →</button>
+</div>
+
+<div class="screen" id="s-result">
+  <div class="result-title">🏆 대회 결과!</div>
+  <div class="podium" id="podium"></div>
+  <div class="result-list" id="result-list"></div>
+  <div class="prize-announce">🍷 <strong id="winner-name"></strong> 님의 테이블에<br><strong>포트와인</strong>을 드립니다! 축하합니다!</div>
+  <button class="btn btn-ghost" onclick="restart()">다시 하기</button>
+</div>
+
+<script>
+var bc = document.getElementById('bubbles');
+for(var i=0;i<18;i++){
+  var b=document.createElement('div');
+  b.className='bubble';
+  var sz=Math.random()*40+10;
+  b.style.width=sz+'px';b.style.height=sz+'px';
+  b.style.left=(Math.random()*100)+'%';
+  b.style.animationDuration=(Math.random()*8+5)+'s';
+  b.style.animationDelay=(Math.random()*6)+'s';
+  bc.appendChild(b);
+}
+var players=[],finishTimes=[],timerStart=null,timerInterval=null,doneCount=0;
+function show(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});document.getElementById(id).classList.add('active')}
+function startCountdown(){
+  var names=['p1','p2','p3','p4'].map(function(id){return document.getElementById(id).value.trim()}).filter(Boolean);
+  if(names.length<2){alert('최소 2명 이상 등록해주세요!');return}
+  players=names;finishTimes=[];doneCount=0;
+  show('s-countdown');
+  var count=3,el=document.getElementById('countdown-num');
+  el.className='countdown-num';el.textContent=count;
+  var tick=setInterval(function(){
+    count--;
+    if(count>0){el.className='countdown-num';el.textContent=count}
+    else{clearInterval(tick);el.className='countdown-go';el.textContent='마셔!';setTimeout(startRace,900)}
+  },900);
+}
+function startRace(){
+  show('s-race');timerStart=Date.now();
+  timerInterval=setInterval(function(){document.getElementById('timer-display').textContent=((Date.now()-timerStart)/1000).toFixed(2)},50);
+  renderRaceCards();
+}
+function renderRaceCards(){
+  var grid=document.getElementById('race-grid');
+  grid.innerHTML=players.map(function(name,i){
+    var done=finishTimes[i]!==undefined;
+    var rank=done?finishTimes.filter(function(t){return t!==undefined&&t<=finishTimes[i]}).length:null;
+    var em=rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':rank===4?'4위':'';
+    return '<div class="race-card'+(done?' done':'')+'" onclick="markDone('+i+')">'+(done?'<div class="race-rank rank-'+rank+'">'+em+'</div>':'')+
+      '<div class="race-player-name">'+name+'</div>'+(done?'<div class="race-finish-time">'+finishTimes[i].toFixed(2)+'초</div>':'<div class="race-tap-hint">완료 시 탭!</div>')+'</div>';
+  }).join('');
+}
+function markDone(i){
+  if(finishTimes[i]!==undefined)return;
+  finishTimes[i]=(Date.now()-timerStart)/1000;doneCount++;renderRaceCards();
+  if(doneCount===players.length){clearInterval(timerInterval);document.getElementById('finish-all-btn').style.display='inline-block'}
+}
+function showResult(){
+  clearInterval(timerInterval);show('s-result');
+  var ranked=players.map(function(name,i){return{name:name,time:finishTimes[i]!==undefined?finishTimes[i]:999}}).sort(function(a,b){return a.time-b.time});
+  var podiumEl=document.getElementById('podium');
+  if(ranked.length===1){
+    podiumEl.innerHTML='<div class="podium-item p1"><div class="podium-name">'+ranked[0].name+'</div><div class="podium-time">'+ranked[0].time.toFixed(2)+'초</div><div class="podium-block">🥇</div></div>';
+  } else {
+    var order=ranked.length>=3?[ranked[1],ranked[0],ranked[2]]:[ranked[1],ranked[0]];
+    var cls=ranked.length>=3?['p2','p1','p3']:['p2','p1'];
+    var emojis=['🥈','🥇','🥉'];
+    podiumEl.innerHTML=order.map(function(p,i){return'<div class="podium-item '+cls[i]+'"><div class="podium-name">'+p.name+'</div><div class="podium-time">'+(p.time<900?p.time.toFixed(2)+'초':'')+'</div><div class="podium-block">'+emojis[i]+'</div></div>'}).join('');
+  }
+  var re=['🥇','🥈','🥉','4위'];
+  document.getElementById('result-list').innerHTML=ranked.map(function(p,i){return'<div class="result-row"><span class="result-row-rank">'+re[i]+'</span><span class="result-row-name">'+p.name+'</span><span class="result-row-time">'+(p.time<900?p.time.toFixed(2)+'초':'-')+'</span></div>'}).join('');
+  document.getElementById('winner-name').textContent=ranked[0].name;
+}
+function restart(){
+  players=[];finishTimes=[];doneCount=0;clearInterval(timerInterval);
+  ['p1','p2','p3','p4'].forEach(function(id){document.getElementById(id).value=''});
+  document.getElementById('finish-all-btn').style.display='none';show('s-intro');
+}
+</script>
+</body>
+</html>

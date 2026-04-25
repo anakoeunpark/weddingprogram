@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jaewon & Koeun — OX Quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #f7f0e6;
+      font-family: 'Noto Serif KR', serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .quiz-wrap {
+      width: 100%;
+      max-width: 860px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .top-bar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      letter-spacing: 0.3em;
+      color: #c9a87c;
+      text-transform: uppercase;
+    }
+
+    .slide-counter {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      color: #b8a898;
+      letter-spacing: 0.1em;
+    }
+
+    .slide {
+      width: 100%;
+      border-radius: 20px;
+      border: 0.5px solid #e0cdb8;
+      background: #fdf8f2;
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3.5rem 3rem;
+      position: relative;
+      animation: fadeIn 0.35s ease;
+    }
+
+    .slide.answer-slide { background: #fdf6ee; border-color: #d4bc9c; }
+    .slide.bonus-q { background: #f2f5f0; border-color: #b8c8b0; }
+    .slide.bonus-a { background: #eef3ec; border-color: #a8c0a0; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .corner { position: absolute; width: 32px; height: 32px; opacity: 0.2; }
+    .corner svg { width: 100%; height: 100%; }
+    .c-tl { top: 18px; left: 18px; }
+    .c-tr { top: 18px; right: 18px; transform: scaleX(-1); }
+    .c-bl { bottom: 18px; left: 18px; transform: scaleY(-1); }
+    .c-br { bottom: 18px; right: 18px; transform: scale(-1); }
+
+    .q-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      color: #c9a87c;
+      letter-spacing: 0.2em;
+      margin-bottom: 1rem;
+    }
+
+    .q-text {
+      font-size: 28px;
+      color: #3d2e1e;
+      text-align: center;
+      line-height: 1.75;
+      word-break: keep-all;
+      max-width: 600px;
+      margin-bottom: 2.5rem;
+    }
+
+    .reveal-btn {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      letter-spacing: 0.25em;
+      color: #a07850;
+      border: 0.5px solid #c9a87c;
+      background: transparent;
+      padding: 12px 36px;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .reveal-btn:hover { background: #f5ede0; }
+
+    .bonus-tag {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      letter-spacing: 0.3em;
+      color: #6a8a62;
+      border: 0.5px solid #6a8a62;
+      padding: 4px 16px;
+      border-radius: 20px;
+      margin-bottom: 1.25rem;
+      display: inline-block;
+    }
+
+    .slide-type-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #a07850;
+      margin-bottom: 1.25rem;
+    }
+
+    .bonus-a .slide-type-label { color: #5a7a52; }
+
+    .answer-big {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 96px;
+      font-weight: 600;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .is-o { color: #a07850; }
+    .is-x { color: #8a5a5a; }
+    .is-star { color: #6a8a62; }
+
+    .divider {
+      width: 56px;
+      height: 0.5px;
+      background: #c9a87c;
+      opacity: 0.4;
+      margin: 0 auto 1.5rem;
+    }
+
+    .answer-explain {
+      font-size: 16px;
+      color: #5a4a3a;
+      text-align: center;
+      line-height: 2;
+      word-break: keep-all;
+      max-width: 560px;
+    }
+
+    .nav-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-top: 1.75rem;
+    }
+
+    .nav-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 0.5px solid #c9a87c;
+      background: transparent;
+      color: #a07850;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+
+    .nav-btn:hover { background: #f5ede0; }
+    .nav-btn:disabled { opacity: 0.25; cursor: default; background: transparent; }
+
+    .dots { display: flex; gap: 6px; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: #e0cdb8; transition: background 0.2s; }
+    .dot.active { background: #a07850; }
+    .dot.done { background: #c9a87c; }
+
+    /* keyboard hint */
+    .key-hint {
+      margin-top: 1rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 11px;
+      color: #c9a87c;
+      letter-spacing: 0.15em;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+<div class="quiz-wrap">
+  <div class="top-bar">
+    <div class="brand">Jaewon &amp; Koeun</div>
+    <div class="slide-counter" id="slideCounter"></div>
+  </div>
+
+  <div id="slideArea" style="width:100%"></div>
+
+  <div class="nav-row">
+    <button class="nav-btn" id="prevBtn" onclick="go(-1)">&#8592;</button>
+    <div class="dots" id="dots"></div>
+    <button class="nav-btn" id="nextBtn" onclick="go(1)">&#8594;</button>
+  </div>
+  <div class="key-hint">← → 키보드로도 이동할 수 있어요</div>
+</div>
+
+<script>
+const CORNER_SVG = `<svg viewBox="0 0 26 26" fill="none"><path d="M2 24 Q2 2 24 2" stroke="#a07850" stroke-width="1.5"/></svg>`;
+const CORNERS = `<div class="corner c-tl">${CORNER_SVG}</div><div class="corner c-tr">${CORNER_SVG}</div><div class="corner c-bl">${CORNER_SVG}</div><div class="corner c-br">${CORNER_SVG}</div>`;
+
+const quizData = [
+  { q: "재원과 고운이 처음 본 날은\n2016년이다", answer: "X", explain: "재원이와 고운이는 12학번 대학 동기로, 입학날인 2012년 3월 처음 알게 되었고, 2016년 연인이 되기까지 각자의 자리에서 열심히 살고 있었습니다." },
+  { q: "먼저 마음을 표현한 사람은 재원이다", answer: "O", explain: "재원이는 고운이와 친구 용완이와 함께 사업을 하자고 해서 만났는데, 재원이가 고운이한테 영화를 같이 보자고 했답니다." },
+  { q: "고운은 재원보다 1살 많다", answer: "X", explain: "2살 차이입니다. 고운은 삼반수를 해서 학교를 늦게 들어갔습니다…" },
+  { q: "사귀기 전 재원이가 피씨방에 찾아왔을 때,\n고운이가 하던 게임은 롤이었다", answer: "X", explain: "당시 하던 게임은 오버워치였습니다. 오버워치를 하러 피씨방 데이트를 자주 즐겼다고 합니다." },
+  { q: "재원이의 고향은 대구고,\n고운이의 고향은 광주이다", answer: "X", explain: "재원이는 경상도 사나이 맞습니다! 고운이는 어머니의 고향이 광주이고, 사실 서울에서 태어나 자랐답니다." },
+  { q: "고등학교 때 재원이는 이과,\n고운이는 문과였다", answer: "O", explain: "재원이는 그림도 잘 그리고 언변이 뛰어나서 문과처럼 보이지만 사실은 이과 출신입니다." },
+  { q: "대학교 때 재원이는 건축,\n고운이는 시각 디자인을 전공했다", answer: "X", explain: "고운이는 사디에서는 제품 디자인, 한예종에서는 인터랙션 디자인을 전공했고, 현재 리멤버의 프로덕트 디자이너로 재직 중입니다." },
+  { q: "재원이의 MBTI는 ENTJ,\n고운이의 MBTI는 ENFP이다", answer: "X", explain: "재원이는 사실 집콕하면서 구두닦이, 그림그리기, 기타치기, 게임을 좋아하는 I였습니다." },
+  { q: "재원이와 고운이가 기르는\n첫째 고양이 이름은 후추이다", answer: "O", explain: "재원이와 고운이는 두 마리 고양이를 기르는데요, 첫째 이름은 후추, 둘째 이름은 소금입니다." },
+  { q: "재원이의 본가는 함안 조씨,\n고운이의 본가는 반남 박씨이다", answer: "O", explain: "정답입니다! 두 집안이 오늘 이 자리에서 만났습니다." },
+];
+
+const BONUS = { q: "오늘 가장 멀리서 온 분을\n데리고 오세요!", answer: "★", explain: "가장 멀리서 와 주신 분께 감사드립니다. 앞으로 나와 주세요!", bonus: true };
+
+const slides = [];
+quizData.forEach((d, i) => {
+  slides.push({ type: 'q', num: i + 1, data: d });
+  slides.push({ type: 'a', num: i + 1, data: d });
+});
+slides.push({ type: 'q', num: 'B', data: BONUS, bonus: true });
+slides.push({ type: 'a', num: 'B', data: BONUS, bonus: true });
+
+let cur = 0;
+
+function renderSlide() {
+  const s = slides[cur];
+  const area = document.getElementById('slideArea');
+  document.getElementById('slideCounter').textContent = (cur + 1) + ' / ' + slides.length;
+  document.getElementById('prevBtn').disabled = cur === 0;
+  document.getElementById('nextBtn').disabled = cur === slides.length - 1;
+
+  if (s.type === 'q') {
+    const isBonus = s.bonus;
+    const qLines = s.data.q.split('\n').join('<br>');
+    area.innerHTML = `<div class="slide ${isBonus ? 'bonus-q' : ''}">
+      ${CORNERS}
+      ${isBonus
+        ? `<span class="bonus-tag">BONUS</span>`
+        : `<div class="q-number">Q ${s.num}</div>`}
+      <div class="q-text">${qLines}</div>
+      <button class="reveal-btn" onclick="go(1)">정답 보기</button>
+    </div>`;
+  } else {
+    const isBonus = s.bonus;
+    const a = s.data.answer;
+    const bigCls = a === 'O' ? 'is-o' : a === 'X' ? 'is-x' : 'is-star';
+    const bigChar = a === 'O' ? '○' : a === 'X' ? '✕' : '★';
+    area.innerHTML = `<div class="slide answer-slide ${isBonus ? 'bonus-a' : ''}">
+      ${CORNERS}
+      <div class="slide-type-label">${isBonus ? 'Bonus' : 'Q ' + s.num + ' — 정답'}</div>
+      <div class="answer-big ${bigCls}">${bigChar}</div>
+      <div class="divider"></div>
+      <div class="answer-explain">${s.data.explain}</div>
+    </div>`;
+  }
+
+  renderDots();
+}
+
+function renderDots() {
+  const container = document.getElementById('dots');
+  container.innerHTML = '';
+  const total = quizData.length + 1;
+  for (let i = 0; i < total; i++) {
+    const qIdx = i * 2;
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (cur === qIdx || cur === qIdx + 1 ? ' active' : cur > qIdx + 1 ? ' done' : '');
+    container.appendChild(dot);
+  }
+}
+
+function go(dir) {
+  cur = Math.max(0, Math.min(slides.length - 1, cur + dir));
+  renderSlide();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') go(-1);
+});
+
+renderSlide();
+</script>
+</body>
+</html>
